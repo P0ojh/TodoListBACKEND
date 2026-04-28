@@ -57,20 +57,23 @@ app.listen(PORT, () => {
 // [0] caminho do node
 // [1] caminho do arquivo js
 // e pega apenas os argumentos passados pelo usuário
-//var userArgs = process.argv.slice(2);
+var userArgs = process.argv.slice(2);
 
 // Pega o primeiro argumento informado na linha de comando
 // Aqui espera-se que seja a URL de conexão com o MongoDB
-//var mongoURL = userArgs[0];
-var mongoURL = process.env.MONGO_URL;
+var mongoURL = userArgs[0];
 
 // Importa o Mongoose, biblioteca usada para conectar e modelar dados no MongoDB
 var mongoose = require('mongoose');
 
 // Faz a conexão com o MongoDB usando a URL recebida por argumento
-mongoose.connect(mongoURL)
-  .then(() => console.log('Database Connected'))
-  .catch((error) => console.log(error));
+mongoose.connect(mongoURL);
+
+// Define que o Mongoose vai usar as Promises nativas do JavaScript
+mongoose.Promise = global.Promise;
+
+// Obtém o objeto de conexão do Mongoose
+const db = mongoose.connection;
 
 // Evento disparado se ocorrer erro na conexão com o banco
 db.on('error', (error) => {
